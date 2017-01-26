@@ -11,7 +11,7 @@ class _thread(threading.Thread):
         # to avoid the thread to be started more than once
         self._started = False 
         # recording last time the actions were done
-        self.last = 0
+        self._last_thread_action = 0
 
          
     def start(self):
@@ -43,8 +43,8 @@ class _thread(threading.Thread):
                     raise e
                 if _abort_on_exception():
                     self.join()
-            self.last = int( time.time() )
-            self._check_for_abort()
+            self._last_thread_action = int( time.time() )
+            self._wait_for_abort()
 
 
     def _check_for_actions(self):
@@ -52,28 +52,29 @@ class _thread(threading.Thread):
         checks if a new loop of action should take place
         '''
         # default implementation
-        return int(time.time()) - self.last > self._time()
+        return int(time.time()) - self._last_thread_action > self._time_between_loops()
 
 
-    def _time(self):
+    def _time_between_loops(self):
         '''
         returns the amount of time to wait between action cycles
         '''
         raise NotImplementedError
 
 
-    def _check_for_abort(self):
+    def _wait_for_abort(self):
         '''
-        checks if the loop needs to be aborted because the thread has been killed
+        waits for the loop to be aborted because the thread has been killed
         '''
         time.sleep( self._wait() )
 
 
     def _wait(self):
         '''
-        returns the amount of time to wait before checking again for interrupt
+        returns the amount of time to wait before checking again for interrupt. Defaults to 1 second.
         '''
-        raise NotImplementedError
+        # reimplement this method if response is not 1 second 
+        return 1
         
 
     def _propagate_exception(self):
