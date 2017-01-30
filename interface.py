@@ -39,9 +39,9 @@ class _thread(threading.Thread):
                 if self._check_for_actions():
                     self._run()
             except Exception, e:
-                if _propagate_exception():
+                if self._propagate_exception():
                     raise e
-                if _abort_on_exception():
+                if self._abort_on_exception():
                     self.join()
             self._last_thread_action = int( time.time() )
             self._wait_for_abort()
