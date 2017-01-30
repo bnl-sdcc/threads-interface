@@ -38,12 +38,13 @@ class _thread(threading.Thread):
             try:                       
                 if self._check_for_actions():
                     self._run()
+                    self._last_thread_action = int( time.time() )
             except Exception, e:
                 if self._propagate_exception():
                     raise e
                 if self._abort_on_exception():
                     self.join()
-            self._last_thread_action = int( time.time() )
+                self._last_thread_action = int( time.time() )
             self._wait_for_abort()
 
 
