@@ -33,7 +33,29 @@ class _thread(threading.Thread):
             threading.Thread.join(self, timeout)
 
 
-    def run(self):                
+    def run(self):
+        self._preloop()
+        self._mainloop()
+        self._postloop()
+    
+
+    def _preloop(self):
+        '''
+        actions to be done before starting the main loop
+        '''
+        # default implementation is to do nothing
+        pass
+
+    
+    def _postloop(self):
+        '''
+        actions to be done after the main loop is finished
+        '''
+        # default implementation is to do nothing
+        pass
+
+    
+    def _mainloop(self):
         while not self.stopevent.isSet():
             try:                       
                 if self._check_for_actions():
