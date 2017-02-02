@@ -116,7 +116,7 @@ class _thread(threading.Thread):
 # =============================================================================
 # Example of usage
 
-if __name__ == __main__:
+if __name__ == "__main__":
     
 
     class MyClass(_thread):
