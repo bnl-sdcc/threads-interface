@@ -59,13 +59,6 @@ class _thread(threading.Thread):
             threading.Thread.start(self)
 
 
-    def join(self,timeout=None):
-        if not self.stopevent.isSet():
-            self.log.debug('joining thread')
-            self.stopevent.set()
-            threading.Thread.join(self, timeout)
-
-
     def run(self):
         self.log.debug('starting run()')
         self._prerun()
@@ -143,6 +136,17 @@ class _thread(threading.Thread):
     def _run(self):
         raise NotImplementedError
 
+
+    def join(self,timeout=None):
+        if not self.stopevent.isSet():
+            self.log.debug('joining thread')
+            self.stopevent.set()
+            self._join()
+            threading.Thread.join(self, timeout)
+
+
+    def _join(self):
+        pass
 
 # =============================================================================
 # Example of usage
